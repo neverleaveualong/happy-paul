@@ -51,11 +51,11 @@ const stagger = {
 };
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { type: 'spring', damping: 20, stiffness: 150 } },
+  show: { opacity: 1, y: 0, transition: { type: 'spring' as const, damping: 20, stiffness: 150 } },
 };
 const fadeScale = {
   hidden: { opacity: 0, scale: 0.92 },
-  show: { opacity: 1, scale: 1, transition: { type: 'spring', damping: 20, stiffness: 150 } },
+  show: { opacity: 1, scale: 1, transition: { type: 'spring' as const, damping: 20, stiffness: 150 } },
 };
 
 // ═══════════════════════════════════════
@@ -163,26 +163,24 @@ const HomeView = () => (
 
     {/* Bento Grid */}
     <div className="grid grid-cols-2 gap-3">
-      <Glass className="col-span-1 p-5 flex flex-col justify-between min-h-[140px]">
-        <div className="flex items-center gap-2">
+      <Glass className="col-span-2 p-5 flex items-center justify-between">
+        <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-terracotta/15 to-champagne/30 flex items-center justify-center">
             <Sparkles size={16} className="text-terracotta" />
           </div>
-          <span className="text-[9px] uppercase tracking-[0.15em] text-warm-gray font-semibold">Next</span>
-        </div>
-        <div className="mt-auto">
-          <p className="font-display text-xl font-semibold text-charcoal italic">600th Day</p>
-          <div className="flex items-center gap-2 mt-1.5">
-            <span className="text-[10px] font-bold text-terracotta bg-terracotta/10 px-2.5 py-0.5 rounded-full">D-11</span>
+          <div>
+            <span className="text-[9px] uppercase tracking-[0.15em] text-warm-gray font-semibold block">Next</span>
+            <p className="font-display text-xl font-semibold text-charcoal italic leading-tight">600th Day</p>
           </div>
         </div>
+        <span className="text-[10px] font-bold text-terracotta bg-terracotta/10 px-2.5 py-0.5 rounded-full">D-11</span>
       </Glass>
 
-      <Glass className="col-span-1 p-4 flex flex-col justify-between min-h-[140px] bg-gradient-to-br from-white/40 to-blush/20!">
+      <Glass className="col-span-1 p-4 flex flex-col justify-between min-h-[120px] bg-gradient-to-br from-white/40 to-blush/20!">
         <Plane size={16} className="text-plum-light" />
         <div>
           <p className="font-display text-2xl font-semibold text-charcoal italic leading-tight">4</p>
-          <p className="text-[9px] text-warm-gray uppercase tracking-wider mt-0.5">Abroad</p>
+          <p className="text-[9px] text-warm-gray uppercase tracking-wider mt-0.5">Abroad Travel</p>
         </div>
       </Glass>
 
@@ -193,7 +191,6 @@ const HomeView = () => (
           <p className="text-[9px] text-warm-gray uppercase tracking-wider mt-0.5">Korea Travel</p>
         </div>
       </Glass>
-
     </div>
   </motion.div>
 );

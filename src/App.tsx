@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Heart, MapPin, Globe,
+  Heart, MapPin, Globe, Calendar,
   Plane, Sparkles
 } from 'lucide-react';
 import {
@@ -13,25 +13,24 @@ import {
 // ═══════════════════════════════════════
 const GEO_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
 
-const KR_CITIES: { name: string; coords: [number, number] }[] = [
-  { name: '서울', coords: [126.978, 37.566] },
-  { name: '인천', coords: [126.705, 37.456] },
-  { name: '춘천', coords: [127.729, 37.881] },
-  { name: '원주', coords: [127.946, 37.342] },
-  { name: '제천', coords: [128.191, 37.132] },
-  { name: '강릉', coords: [128.876, 37.751] },
-  { name: '속초', coords: [128.591, 38.207] },
-  { name: '동해', coords: [129.114, 37.524] },
+const KR_CITIES = [
+  { name: '서울', coords: [126.978, 37.566] as [number, number], date: '2024.03 ~', memo: '홍대, 이태원, 명동, 여의도' },
+  { name: '인천', coords: [126.705, 37.456] as [number, number], date: '2024.05', memo: '차이나타운 데이트' },
+  { name: '춘천', coords: [127.729, 37.881] as [number, number], date: '2024.09', memo: '닭갈비 먹방 여행' },
+  { name: '홍천', coords: [127.889, 37.697] as [number, number], date: '2024.08', memo: '비발디파크' },
+  { name: '원주', coords: [127.946, 37.342] as [number, number], date: '2024.10', memo: '소금산 출렁다리' },
+  { name: '강릉', coords: [128.876, 37.751] as [number, number], date: '2024.11', memo: '경포대 & 안목해변 카페' },
+  { name: '속초', coords: [128.591, 38.207] as [number, number], date: '2024.11', memo: '설악산 케이블카' },
+  { name: '동해', coords: [129.114, 37.524] as [number, number], date: '2024.11', memo: '묵호항 일출' },
 ];
 
 const WORLD_PLACES = [
-  { name: 'Hong Kong', nameKr: '홍콩', flag: '🇭🇰', coords: [114.169, 22.319] as [number, number], date: '2024' },
-  { name: 'Macau', nameKr: '마카오', flag: '🇲🇴', coords: [113.543, 22.198] as [number, number], date: '2024' },
-  { name: 'Da Nang', nameKr: '다낭', flag: '🇻🇳', coords: [108.202, 16.054] as [number, number], date: '2025' },
-  { name: 'New Zealand', nameKr: '뉴질랜드', flag: '🇳🇿', coords: [174.763, -36.848] as [number, number], date: '2025' },
+  { name: 'Hong Kong', nameKr: '홍콩', flag: '🇭🇰', coords: [114.169, 22.319] as [number, number], startDate: '2024.07.15', endDate: '2024.07.19', memo: '빅토리아 피크 야경' },
+  { name: 'Macau', nameKr: '마카오', flag: '🇲🇴', coords: [113.543, 22.198] as [number, number], startDate: '2024.07.19', endDate: '2024.07.21', memo: '세나도 광장 & 에그타르트' },
+  { name: 'Da Nang', nameKr: '다낭', flag: '🇻🇳', coords: [108.202, 16.054] as [number, number], startDate: '2025.01.10', endDate: '2025.01.15', memo: '바나힐 & 미케비치' },
+  { name: 'New Zealand', nameKr: '뉴질랜드', flag: '🇳🇿', coords: [174.763, -36.848] as [number, number], startDate: '2025.02.20', endDate: '2025.03.02', memo: '남섬 로드트립' },
 ];
 
-// Visited countries for map coloring
 const VISITED_COUNTRIES = ['China', 'Vietnam', 'New Zealand'];
 
 const TIMELINE = [
@@ -263,32 +262,12 @@ const TimelineView = () => {
 // ═══════════════════════════════════════
 // 3. KOREA MAP VIEW
 // ═══════════════════════════════════════
-// Province name mapping for visited highlighting
-const VISITED_PROVINCES = new Set([
-  'Seoul', 'Incheon', 'Gyeonggi-do', 'Gangwon-do',
-]);
-
-const PROVINCE_KR: Record<string, string> = {
-  'Seoul': '서울',
-  'Busan': '부산',
-  'Daegu': '대구',
-  'Incheon': '인천',
-  'Gwangju': '광주',
-  'Daejeon': '대전',
-  'Ulsan': '울산',
-  'Gyeonggi-do': '경기도',
-  'Gangwon-do': '강원도',
-  'Chungcheongbuk-do': '충북',
-  'Chungcheongnam-do': '충남',
-  'Jeollabuk-do': '전북',
-  'Jeollanam-do': '전남',
-  'Gyeongsangbuk-do': '경북',
-  'Gyeongsangnam-do': '경남',
-  'Jeju': '제주',
-};
+// Match visited cities to municipality NAME_1 (metro cities) or NAME_2 (counties/cities)
+const VISITED_METROS = new Set(['Seoul', 'Incheon']);
+const VISITED_MUNICIPALITIES = new Set(['Chuncheon', 'Hongcheon', 'Wonju', 'Gangneung', 'Sokcho', 'Donghae']);
 
 const KoreaMapView = () => {
-  const [hoveredProvince, setHoveredProvince] = useState<string | null>(null);
+  const [hovered, setHovered] = useState<string | null>(null);
 
   return (
     <motion.div variants={stagger} initial="hidden" animate="show" exit={{ opacity: 0 }} className="px-6 space-y-5">
@@ -300,24 +279,15 @@ const KoreaMapView = () => {
         <span className="text-[10px] font-bold text-plum bg-blush/50 px-3 py-1 rounded-full">{KR_CITIES.length}개 도시</span>
       </motion.div>
 
-      {hoveredProvince && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-          className="text-center text-sm font-semibold text-plum">
-          {PROVINCE_KR[hoveredProvince] ?? hoveredProvince}
-        </motion.div>
-      )}
-
-      {/* Detailed Korea Map */}
+      {/* Municipality-level Korea Map */}
       <motion.div variants={fadeScale} className="relative">
         <div className="bg-gradient-to-b from-champagne/20 via-white/40 to-blush/10 border border-white/60 rounded-3xl overflow-hidden shadow-[0_8px_32px_rgba(109,58,93,0.08)]">
           <ComposableMap
             projection="geoMercator"
             projectionConfig={{ center: [127.8, 36.0], scale: 5800 }}
-            width={400}
-            height={520}
+            width={400} height={520}
             style={{ width: '100%', height: 'auto' }}
           >
-            {/* Background: nearby countries from world atlas */}
             <Geographies geography={GEO_URL}>
               {({ geographies }) =>
                 geographies
@@ -330,19 +300,19 @@ const KoreaMapView = () => {
               }
             </Geographies>
 
-            {/* Detailed South Korea provinces */}
-            <Geographies geography="/geo/korea-provinces.json">
+            <Geographies geography="/geo/korea-municipalities.json">
               {({ geographies }) =>
                 geographies.map(geo => {
-                  const name = geo.properties.NAME_1;
-                  const isVisited = VISITED_PROVINCES.has(name);
-                  const isHovered = hoveredProvince === name;
+                  const province = geo.properties.NAME_1;
+                  const city = geo.properties.NAME_2;
+                  const isVisited = VISITED_METROS.has(province) || VISITED_MUNICIPALITIES.has(city);
+                  const isHovered = hovered === `${province}-${city}`;
                   return (
                     <Geography key={geo.rsmKey} geography={geo}
                       fill={isHovered ? '#E8B4B2' : isVisited ? '#F2D7D5' : '#FAF0ED'}
-                      stroke="#C9918F" strokeWidth={0.6}
-                      onMouseEnter={() => setHoveredProvince(name)}
-                      onMouseLeave={() => setHoveredProvince(null)}
+                      stroke={isVisited ? '#C9918F' : '#E8DDD8'} strokeWidth={0.3}
+                      onMouseEnter={() => setHovered(`${province}-${city}`)}
+                      onMouseLeave={() => setHovered(null)}
                       style={{
                         default: { outline: 'none', transition: 'fill 0.2s' },
                         hover: { outline: 'none', fill: '#E8B4B2' },
@@ -353,7 +323,6 @@ const KoreaMapView = () => {
               }
             </Geographies>
 
-            {/* City markers */}
             {KR_CITIES.map((city, i) => (
               <Marker key={city.name} coordinates={city.coords}>
                 <circle r={10} fill="#C9918F" opacity={0.15}>
@@ -362,11 +331,9 @@ const KoreaMapView = () => {
                 </circle>
                 <circle r={4} fill="#6B3A5D" stroke="#FFF8F0" strokeWidth={2} />
                 <text textAnchor="middle" y={-12}
-                  style={{
-                    fontFamily: 'Pretendard, sans-serif', fontSize: 10, fontWeight: 700,
+                  style={{ fontFamily: 'Pretendard, sans-serif', fontSize: 10, fontWeight: 700,
                     fill: '#2D2A32', paintOrder: 'stroke', stroke: '#FFF8F0',
-                    strokeWidth: 3, strokeLinecap: 'round', strokeLinejoin: 'round',
-                  }}>
+                    strokeWidth: 3, strokeLinecap: 'round', strokeLinejoin: 'round' }}>
                   {city.name}
                 </text>
               </Marker>
@@ -375,13 +342,28 @@ const KoreaMapView = () => {
         </div>
       </motion.div>
 
-      {/* City chips */}
-      <motion.div variants={fadeUp} className="flex flex-wrap gap-2">
-        {KR_CITIES.map(city => (
-          <span key={city.name} className="text-[10px] font-semibold text-plum bg-blush/40 px-3 py-1.5 rounded-full border border-blush/60">
-            <MapPin size={8} className="inline mr-0.5 -mt-0.5" /> {city.name}
-          </span>
-        ))}
+      {/* Trip List */}
+      <motion.div variants={fadeUp}>
+        <p className="text-[9px] text-warm-gray uppercase tracking-[0.2em] mb-3 font-semibold">Travel Log</p>
+        <div className="space-y-2.5">
+          {KR_CITIES.map((city, i) => (
+            <motion.div key={city.name}
+              initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3 + i * 0.06 }}
+              className="flex items-center gap-3 bg-white/50 backdrop-blur-lg border border-white/60 rounded-2xl px-4 py-3 shadow-[0_2px_12px_rgba(109,58,93,0.05)]">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blush to-champagne flex items-center justify-center shrink-0">
+                <MapPin size={14} className="text-plum" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-display text-base italic text-charcoal">{city.name}</h4>
+                  <span className="text-[9px] text-dusty-rose font-semibold bg-blush/30 px-2 py-0.5 rounded-full shrink-0 ml-2">{city.date}</span>
+                </div>
+                <p className="text-[10px] text-warm-gray mt-0.5 truncate">{city.memo}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </motion.div>
     </motion.div>
   );
@@ -464,23 +446,34 @@ const WorldMapView = () => (
       </ComposableMap>
     </DeepCard>
 
-    {/* Country cards */}
-    <div className="space-y-3">
-      {WORLD_PLACES.map(c => (
-        <Glass key={c.name} className="p-0 overflow-hidden flex">
-          <div className="w-16 bg-gradient-to-br from-blush to-champagne flex items-center justify-center shrink-0">
-            <span className="text-2xl">{c.flag}</span>
-          </div>
-          <div className="p-4 flex-1 flex justify-between items-center">
-            <div>
-              <h4 className="font-display text-base italic text-charcoal">{c.nameKr}</h4>
-              <p className="text-[10px] text-warm-gray">{c.name}</p>
+    {/* Trip List */}
+    <motion.div variants={fadeUp}>
+      <p className="text-[9px] text-warm-gray uppercase tracking-[0.2em] mb-3 font-semibold">Travel Log</p>
+      <div className="space-y-2.5">
+        {WORLD_PLACES.map((place, i) => (
+          <motion.div key={place.name}
+            initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3 + i * 0.08 }}
+            className="flex items-center gap-3 bg-white/50 backdrop-blur-lg border border-white/60 rounded-2xl px-4 py-3.5 shadow-[0_2px_12px_rgba(109,58,93,0.05)]">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blush to-champagne flex items-center justify-center shrink-0">
+              <span className="text-xl">{place.flag}</span>
             </div>
-            <span className="text-[9px] text-dusty-rose font-semibold bg-blush/30 px-2 py-0.5 rounded-full">{c.date}</span>
-          </div>
-        </Glass>
-      ))}
-    </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between">
+                <h4 className="font-display text-base italic text-charcoal">{place.nameKr}</h4>
+                <span className="text-[8px] text-warm-gray font-medium shrink-0 ml-2">{place.name}</span>
+              </div>
+              <div className="flex items-center gap-2 mt-1">
+                <span className="text-[9px] text-dusty-rose font-semibold flex items-center gap-1">
+                  <Calendar size={9} /> {place.startDate} ~ {place.endDate}
+                </span>
+              </div>
+              <p className="text-[10px] text-warm-gray mt-0.5 truncate">{place.memo}</p>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </motion.div>
 
     {/* Dream destinations */}
     <motion.div variants={fadeUp}>

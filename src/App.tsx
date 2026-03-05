@@ -139,8 +139,16 @@ const START_DATE = new Date('2024-07-25T00:00:00+09:00');
 const HomeView = () => {
   const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Seoul' }));
   const dday = Math.floor((now.getTime() - START_DATE.getTime()) / 86400000) + 1;
-  const next100 = Math.ceil(dday / 100) * 100;
-  const daysUntilNext = next100 - dday;
+
+  // Milestones: 600일, 2주년(2026.07.25), 1000일, ...
+  const anniversary2 = Math.floor((new Date('2026-07-25T00:00:00+09:00').getTime() - START_DATE.getTime()) / 86400000) + 1;
+  const milestones = [
+    { day: 600, label: '600th Day' },
+    { day: anniversary2, label: '2nd Anniversary' },
+    { day: 1000, label: '1000th Day' },
+  ];
+  const nextMilestone = milestones.find(m => m.day > dday) || milestones[milestones.length - 1];
+  const daysUntilNext = nextMilestone.day - dday;
   return (
   <motion.div variants={stagger} initial="hidden" animate="show" exit={{ opacity: 0 }} className="px-6 space-y-5">
     {/* Header */}
@@ -167,7 +175,7 @@ const HomeView = () => {
           <Heart size={70} fill="#6B3A5D" />
         </motion.div>
         <p className="font-display text-lg italic text-dusty-rose tracking-wide">
-          <span className="font-body text-[10px] not-italic uppercase tracking-[0.3em] text-warm-gray block mb-1">since 2024</span>
+          <span className="font-body text-[10px] not-italic uppercase tracking-[0.3em] text-warm-gray block mb-1">since 2024.07.25</span>
           나겸 <Heart size={14} className="inline text-dusty-rose fill-dusty-rose mx-1" /> 우현
         </p>
         <h2 className="shimmer-text font-display text-7xl font-bold mt-3 pb-1 tracking-tight leading-none">D+{dday}</h2>
@@ -184,7 +192,7 @@ const HomeView = () => {
           </div>
           <div>
             <span className="text-[9px] uppercase tracking-[0.15em] text-warm-gray font-semibold block">Next</span>
-            <p className="font-display text-xl font-semibold text-charcoal italic leading-tight">{next100}th Day</p>
+            <p className="font-display text-xl font-semibold text-charcoal italic leading-tight">{nextMilestone.label}</p>
           </div>
         </div>
         <span className="text-[10px] font-bold text-terracotta bg-terracotta/10 px-2.5 py-0.5 rounded-full">D-{daysUntilNext}</span>

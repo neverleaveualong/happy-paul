@@ -1,0 +1,45 @@
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFF8F0"/>
+      <stop offset="50%" style="stop-color:#F5E6E0"/>
+      <stop offset="100%" style="stop-color:#EDD5CE"/>
+    </linearGradient>
+    <linearGradient id="heart" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#C9918F"/>
+      <stop offset="100%" style="stop-color:#6B3A5D"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Decorative circles -->
+  <circle cx="1050" cy="100" r="120" fill="none" stroke="#C9918F" stroke-width="2" opacity="0.15"/>
+  <circle cx="150" cy="530" r="80" fill="none" stroke="#A0616A" stroke-width="1.5" opacity="0.12"/>
+  <circle cx="1100" cy="500" r="60" fill="none" stroke="#C9918F" stroke-width="1" opacity="0.1"/>
+
+  <!-- Heart icon -->
+  <g transform="translate(600, 200)" fill="url(#heart)">
+    <path d="M0-40 C-20-60-50-50-50-30 C-50-5-25 15 0 40 C25 15 50-5 50-30 C50-50 20-60 0-40Z" transform="scale(1.2)"/>
+  </g>
+
+  <!-- Title -->
+  <text x="600" y="310" text-anchor="middle" font-family="Georgia, Cormorant, serif" font-size="72" font-weight="600" font-style="italic" fill="#6B3A5D" letter-spacing="-1">
+    Happy Paul
+  </text>
+
+  <!-- Names -->
+  <text x="600" y="380" text-anchor="middle" font-family="Pretendard, -apple-system, sans-serif" font-size="32" fill="#C9918F" font-weight="500">
+    &#xB098;&#xAC78; &#x2665; &#xC6B0;&#xD604;
+  </text>
+
+  <!-- Since -->
+  <text x="600" y="430" text-anchor="middle" font-family="Pretendard, -apple-system, sans-serif" font-size="18" fill="#8B7E74" letter-spacing="4" font-weight="500">
+    SINCE 2024.07.25
+  </text>
+
+  <!-- Tagline -->
+  <text x="600" y="490" text-anchor="middle" font-family="Georgia, Cormorant, serif" font-size="20" fill="#A0616A" font-style="italic" opacity="0.7">
+    our little universe
+  </text>
+</svg>

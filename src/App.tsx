@@ -13,22 +13,30 @@ import {
 // ═══════════════════════════════════════
 const GEO_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
 
-const KR_CITIES = [
-  { name: '서울', coords: [126.978, 37.566] as [number, number], date: '2024.03 ~', memo: '홍대, 이태원, 명동, 여의도' },
-  { name: '인천', coords: [126.705, 37.456] as [number, number], date: '2024.05', memo: '차이나타운 데이트' },
-  { name: '춘천', coords: [127.729, 37.881] as [number, number], date: '2024.09', memo: '닭갈비 먹방 여행' },
-  { name: '홍천', coords: [127.889, 37.697] as [number, number], date: '2024.08', memo: '비발디파크' },
-  { name: '원주', coords: [127.946, 37.342] as [number, number], date: '2024.10', memo: '소금산 출렁다리' },
-  { name: '강릉', coords: [128.876, 37.751] as [number, number], date: '2024.11', memo: '경포대 & 안목해변 카페' },
-  { name: '속초', coords: [128.591, 38.207] as [number, number], date: '2024.11', memo: '설악산 케이블카' },
-  { name: '동해', coords: [129.114, 37.524] as [number, number], date: '2024.11', memo: '묵호항 일출' },
+const KR_CITIES: { name: string; coords: [number, number]; date: string; memo: string; emoji: string; gradient: string; labelDx?: number; labelDy?: number }[] = [
+  { name: '전주', coords: [127.149, 35.824], date: '2025.02', memo: '한옥마을', emoji: '🏯', gradient: 'from-amber-100 to-orange-100' },
+  { name: '대전', coords: [127.385, 36.350], date: '2025.01', memo: '성심당', emoji: '🍞', gradient: 'from-yellow-100 to-amber-100' },
+  { name: '횡성', coords: [127.985, 37.491], date: '2024.12', memo: '웰리힐리 스키장', emoji: '⛷️', gradient: 'from-sky-100 to-blue-100', labelDx: 22, labelDy: 4 },
+  { name: '강릉', coords: [128.876, 37.751], date: '2024.11', memo: '경포대 & 안목해변 카페', emoji: '🌊', gradient: 'from-cyan-100 to-sky-100', labelDx: 18, labelDy: 0 },
+  { name: '속초', coords: [128.591, 38.207], date: '2024.11', memo: '설악산 케이블카', emoji: '🚡', gradient: 'from-emerald-100 to-teal-100' },
+  { name: '동해', coords: [129.114, 37.524], date: '2024.11', memo: '묵호항 일출', emoji: '🌅', gradient: 'from-orange-100 to-rose-100', labelDx: 18, labelDy: -6 },
+  { name: '삼척', coords: [129.165, 37.450], date: '2024.11', memo: '바위', emoji: '🪨', gradient: 'from-stone-100 to-gray-200', labelDx: 18, labelDy: 8 },
+  { name: '하남', coords: [127.214, 37.539], date: '2024.10', memo: '스타필드', emoji: '🛍️', gradient: 'from-pink-100 to-fuchsia-100', labelDx: 20, labelDy: 4 },
+  { name: '원주', coords: [127.946, 37.342], date: '2024.10', memo: '소금산 출렁다리', emoji: '🌉', gradient: 'from-lime-100 to-emerald-100' },
+  { name: '춘천', coords: [127.729, 37.881], date: '2024.09', memo: '닭갈비 먹방 여행', emoji: '🍗', gradient: 'from-red-100 to-orange-100' },
+  { name: '의정부', coords: [127.034, 37.738], date: '2024.09', memo: '방탈출', emoji: '🔐', gradient: 'from-violet-100 to-purple-100', labelDx: -28, labelDy: 0 },
+  { name: '용인', coords: [127.177, 37.241], date: '2024.09', memo: '에버랜드', emoji: '🎢', gradient: 'from-yellow-100 to-green-100' },
+  { name: '홍천', coords: [127.889, 37.697], date: '2024.08', memo: '펜션', emoji: '🏡', gradient: 'from-green-100 to-emerald-100', labelDx: 18, labelDy: 4 },
+  { name: '양주', coords: [127.045, 37.785], date: '2024.08', memo: '나겸이 본가 여행', emoji: '🏠', gradient: 'from-rose-100 to-pink-100', labelDx: -20, labelDy: -10 },
+  { name: '인천', coords: [126.705, 37.456], date: '2024.05', memo: '차이나타운 데이트', emoji: '🥟', gradient: 'from-red-100 to-rose-100', labelDx: -22, labelDy: 0 },
+  { name: '서울', coords: [126.978, 37.566], date: '2024.03 ~', memo: '홍대, 이태원, 명동, 여의도', emoji: '🏙️', gradient: 'from-indigo-100 to-violet-100', labelDx: -22, labelDy: -10 },
 ];
 
 const WORLD_PLACES = [
-  { name: 'Hong Kong', nameKr: '홍콩', flag: '🇭🇰', coords: [114.169, 22.319] as [number, number], startDate: '2024.07.15', endDate: '2024.07.19', memo: '빅토리아 피크 야경' },
-  { name: 'Macau', nameKr: '마카오', flag: '🇲🇴', coords: [113.543, 22.198] as [number, number], startDate: '2024.07.19', endDate: '2024.07.21', memo: '세나도 광장 & 에그타르트' },
-  { name: 'Da Nang', nameKr: '다낭', flag: '🇻🇳', coords: [108.202, 16.054] as [number, number], startDate: '2025.01.10', endDate: '2025.01.15', memo: '바나힐 & 미케비치' },
-  { name: 'New Zealand', nameKr: '뉴질랜드', flag: '🇳🇿', coords: [174.763, -36.848] as [number, number], startDate: '2025.02.20', endDate: '2025.03.02', memo: '남섬 로드트립' },
+  { name: 'Da Nang', nameKr: '다낭', flag: '🇻🇳', coords: [108.202, 16.054] as [number, number], startDate: '2025.12.01', endDate: '2025.12.05', memo: '바나힐 & 미케비치', emoji: '🏖️', gradient: 'from-cyan-100 to-teal-100' },
+  { name: 'Hong Kong', nameKr: '홍콩', flag: '🇭🇰', coords: [114.169, 22.319] as [number, number], startDate: '2024.12.03', endDate: '2024.12.07', memo: '빅토리아 피크 야경', emoji: '🌃', gradient: 'from-purple-100 to-indigo-100' },
+  { name: 'Macau', nameKr: '마카오', flag: '🇲🇴', coords: [113.543, 22.198] as [number, number], startDate: '2024.12.05', endDate: '2024.12.06', memo: '세나도 광장 & 에그타르트', emoji: '🎰', gradient: 'from-amber-100 to-yellow-100' },
+  { name: 'New Zealand', nameKr: '뉴질랜드', flag: '🇳🇿', coords: [174.763, -36.848] as [number, number], startDate: '2024.06.21', endDate: '2024.07.21', memo: '해밀턴 & 오클랜드 어학원', emoji: '🐑', gradient: 'from-emerald-100 to-green-100' },
 ];
 
 const VISITED_COUNTRIES = ['China', 'Vietnam', 'New Zealand'];
@@ -126,7 +134,14 @@ const TabBtn = ({ id, icon: Icon, label, active, set }: { id: string; icon: any;
 // ═══════════════════════════════════════
 // 1. HOME VIEW
 // ═══════════════════════════════════════
-const HomeView = () => (
+const START_DATE = new Date('2024-07-25T00:00:00+09:00');
+
+const HomeView = () => {
+  const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Seoul' }));
+  const dday = Math.floor((now.getTime() - START_DATE.getTime()) / 86400000) + 1;
+  const next100 = Math.ceil(dday / 100) * 100;
+  const daysUntilNext = next100 - dday;
+  return (
   <motion.div variants={stagger} initial="hidden" animate="show" exit={{ opacity: 0 }} className="px-6 space-y-5">
     {/* Header */}
     <motion.div variants={fadeUp} className="flex justify-between items-start pt-2">
@@ -155,8 +170,8 @@ const HomeView = () => (
           <span className="font-body text-[10px] not-italic uppercase tracking-[0.3em] text-warm-gray block mb-1">since 2024</span>
           나겸 <Heart size={14} className="inline text-dusty-rose fill-dusty-rose mx-1" /> 우현
         </p>
-        <h2 className="shimmer-text font-display text-7xl font-bold mt-3 pb-1 tracking-tight leading-none">D+589</h2>
-        <p className="text-warm-gray mt-3 text-[11px] font-medium tracking-wide">우리의 사랑이 시작된 지 589일째</p>
+        <h2 className="shimmer-text font-display text-7xl font-bold mt-3 pb-1 tracking-tight leading-none">D+{dday}</h2>
+        <p className="text-warm-gray mt-3 text-[11px] font-medium tracking-wide">우리의 사랑이 시작된 지 {dday}일째</p>
       </div>
     </motion.div>
 
@@ -169,10 +184,10 @@ const HomeView = () => (
           </div>
           <div>
             <span className="text-[9px] uppercase tracking-[0.15em] text-warm-gray font-semibold block">Next</span>
-            <p className="font-display text-xl font-semibold text-charcoal italic leading-tight">600th Day</p>
+            <p className="font-display text-xl font-semibold text-charcoal italic leading-tight">{next100}th Day</p>
           </div>
         </div>
-        <span className="text-[10px] font-bold text-terracotta bg-terracotta/10 px-2.5 py-0.5 rounded-full">D-11</span>
+        <span className="text-[10px] font-bold text-terracotta bg-terracotta/10 px-2.5 py-0.5 rounded-full">D-{daysUntilNext}</span>
       </Glass>
 
       <Glass className="col-span-1 p-4 flex flex-col justify-between min-h-[120px] bg-gradient-to-br from-white/40 to-blush/20!">
@@ -186,13 +201,14 @@ const HomeView = () => (
       <Glass className="col-span-1 p-4 flex flex-col justify-between min-h-[120px]">
         <MapPin size={16} className="text-dusty-rose" />
         <div>
-          <p className="font-display text-2xl font-semibold text-charcoal italic">8</p>
+          <p className="font-display text-2xl font-semibold text-charcoal italic">16</p>
           <p className="text-[9px] text-warm-gray uppercase tracking-wider mt-0.5">Korea Travel</p>
         </div>
       </Glass>
     </div>
   </motion.div>
 );
+};
 
 // ═══════════════════════════════════════
 // 2. TIMELINE VIEW
@@ -263,8 +279,8 @@ const TimelineView = () => {
 // 3. KOREA MAP VIEW
 // ═══════════════════════════════════════
 // Match visited cities to municipality NAME_1 (metro cities) or NAME_2 (counties/cities)
-const VISITED_METROS = new Set(['Seoul', 'Incheon']);
-const VISITED_MUNICIPALITIES = new Set(['Chuncheon', 'Hongcheon', 'Wonju', 'Gangneung', 'Sokcho', 'Donghae']);
+const VISITED_METROS = new Set(['Seoul', 'Incheon', 'Daejeon']);
+const VISITED_MUNICIPALITIES = new Set(['Chuncheon', 'Hongcheon', 'Wonju', 'Hoengseong', 'Gangneung', 'Sokcho', 'Donghae', 'Samcheok', 'Yongin', 'Hanam', 'Uijeongbu', 'Yangju', 'Jeonju']);
 
 const KoreaMapView = () => {
   const [hovered, setHovered] = useState<string | null>(null);
@@ -284,7 +300,7 @@ const KoreaMapView = () => {
         <div className="bg-gradient-to-b from-champagne/20 via-white/40 to-blush/10 border border-white/60 rounded-3xl overflow-hidden shadow-[0_8px_32px_rgba(109,58,93,0.08)]">
           <ComposableMap
             projection="geoMercator"
-            projectionConfig={{ center: [127.8, 36.0], scale: 5800 }}
+            projectionConfig={{ center: [127.8, 36.5], scale: 5400 }}
             width={400} height={520}
             style={{ width: '100%', height: 'auto' }}
           >
@@ -329,9 +345,12 @@ const KoreaMapView = () => {
                   <animate attributeName="r" values="6;14;6" dur="2.5s" repeatCount="indefinite" begin={`${i * 0.3}s`} />
                   <animate attributeName="opacity" values="0.2;0;0.2" dur="2.5s" repeatCount="indefinite" begin={`${i * 0.3}s`} />
                 </circle>
-                <circle r={4} fill="#6B3A5D" stroke="#FFF8F0" strokeWidth={2} />
-                <text textAnchor="middle" y={-12}
-                  style={{ fontFamily: 'Pretendard, sans-serif', fontSize: 10, fontWeight: 700,
+                <circle r={3.5} fill="#6B3A5D" stroke="#FFF8F0" strokeWidth={1.5} />
+                <text
+                  textAnchor={city.labelDx ? (city.labelDx > 0 ? 'start' : 'end') : 'middle'}
+                  x={city.labelDx || 0}
+                  y={city.labelDy !== undefined ? city.labelDy : -10}
+                  style={{ fontFamily: 'Pretendard, sans-serif', fontSize: 8, fontWeight: 700,
                     fill: '#2D2A32', paintOrder: 'stroke', stroke: '#FFF8F0',
                     strokeWidth: 3, strokeLinecap: 'round', strokeLinejoin: 'round' }}>
                   {city.name}
@@ -350,9 +369,9 @@ const KoreaMapView = () => {
             <motion.div key={city.name}
               initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 + i * 0.06 }}
-              className="flex items-center gap-3 bg-white/50 backdrop-blur-lg border border-white/60 rounded-2xl px-4 py-3 shadow-[0_2px_12px_rgba(109,58,93,0.05)]">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blush to-champagne flex items-center justify-center shrink-0">
-                <MapPin size={14} className="text-plum" />
+              className="flex items-center gap-3 bg-white/50 backdrop-blur-lg border border-white/60 rounded-2xl px-4 py-3.5 shadow-[0_2px_12px_rgba(109,58,93,0.05)]">
+              <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${city.gradient} flex items-center justify-center shrink-0 shadow-sm`}>
+                <span className="text-lg">{city.emoji}</span>
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between">
@@ -455,8 +474,9 @@ const WorldMapView = () => (
             initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.3 + i * 0.08 }}
             className="flex items-center gap-3 bg-white/50 backdrop-blur-lg border border-white/60 rounded-2xl px-4 py-3.5 shadow-[0_2px_12px_rgba(109,58,93,0.05)]">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blush to-champagne flex items-center justify-center shrink-0">
-              <span className="text-xl">{place.flag}</span>
+            <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${place.gradient} flex flex-col items-center justify-center shrink-0 shadow-sm`}>
+              <span className="text-xl leading-none">{place.emoji}</span>
+              <span className="text-[8px] mt-0.5">{place.flag}</span>
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between">
@@ -479,7 +499,7 @@ const WorldMapView = () => (
     <motion.div variants={fadeUp}>
       <p className="text-[9px] text-warm-gray uppercase tracking-[0.2em] mb-3 px-1 font-semibold">Dream Destinations</p>
       <div className="flex gap-2 flex-wrap">
-        {['Switzerland 🇨🇭', 'Iceland 🇮🇸', 'Greece 🇬🇷', 'Hawaii 🌺'].map(d => (
+        {['Australia 🇦🇺', 'Chongqing 🇨🇳', 'Shanghai 🇨🇳', 'Canada 🇨🇦'].map(d => (
           <span key={d} className="text-[10px] text-plum-light bg-blush/30 px-3 py-1.5 rounded-full border border-blush/50 font-medium">{d}</span>
         ))}
       </div>

@@ -896,7 +896,7 @@ const KoreaMapView = () => {
                 </div>
                 {c.memo && <p className="text-[10px] text-warm-gray mt-0.5 truncate">{c.memo}</p>}
               </div>
-              <div className="flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+              <div className="flex gap-0.5 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity shrink-0">
                 <button onClick={(e) => { e.stopPropagation(); openEdit(c); }}
                   className="bg-transparent border-none cursor-pointer text-warm-gray/40 hover:text-plum p-1"><Pencil size={13} /></button>
                 <button onClick={(e) => { e.stopPropagation(); setDelTarget(c); }}
@@ -1155,7 +1155,7 @@ const WorldMapView = () => {
                 </div>
                 {p.memo && <p className="text-[10px] text-warm-gray mt-0.5 truncate">{p.memo}</p>}
               </div>
-              <div className="flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+              <div className="flex gap-0.5 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity shrink-0">
                 <button onClick={(e) => { e.stopPropagation(); openEdit(p); }}
                   className="bg-transparent border-none cursor-pointer text-warm-gray/40 hover:text-plum p-1"><Pencil size={13} /></button>
                 <button onClick={(e) => { e.stopPropagation(); setDelTarget(p); }}
